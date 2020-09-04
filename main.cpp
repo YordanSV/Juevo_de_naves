@@ -50,10 +50,11 @@ void Nave::mover() {
     if (kbhit()){      //Detecta si se ha precionado una tecla
         char tecla = getch();//Guardar la letra que se preciona
         borrar();
-        if (tecla == DERECHA) x++;
-        if (tecla == IZQUIERDA) x--;
-        if (tecla == ABAJO) y++;
-        if (tecla == ARRIBA) y--;
+        if (tecla == IZQUIERDA && x > 3) x--;
+        if (tecla == DERECHA && x+6 < 77) x++;
+        if (tecla == ARRIBA && y > 4) y--;
+        if (tecla == ABAJO && y+3 < 33) y++;
+
         pintar();
     }
 }
