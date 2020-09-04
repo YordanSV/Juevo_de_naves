@@ -26,13 +26,14 @@ void ocultarCursor(){
 }
 
 class Nave{
-    int x,y,vidas;
+    int x,y,corazones,vidas;
 public:
-    Nave(int _x, int _y,int _vidas): x(_x) , y(_y), vidas(_vidas){}     //Aqui se creo el constructor
+    Nave(int _x, int _y,int _corazones,int _vidas): x(_x) , y(_y), corazones(_corazones), vidas(_vidas){}     //Aqui se creo el constructor
     void pintarNave();
     void borrar();
     void mover();
-    void pintarVidas();
+    void pintarCorazones();
+    void morir();
 };
 
 void Nave::pintarNave(){
@@ -42,19 +43,21 @@ void Nave::pintarNave(){
 
 }
 void Nave::borrar() {
-    gotoxy(x,y); printf("     ");
-    gotoxy(x,y+1); printf("     ");
-    gotoxy(x,y+2); printf("      ");
+    gotoxy(x,y); printf("         ");
+    gotoxy(x,y+1); printf("        ");
+    gotoxy(x,y+2); printf("         ");
 }
 void Nave::mover() {
     if (kbhit()){      //Detecta si se ha precionado una tecla
         char tecla = getch();//Guardar la letra que se preciona
         borrar();
+        if (tecla == 'b') corazones--;
         if (tecla == IZQUIERDA && x > 3) x--;
         if (tecla == DERECHA && x+6 < 77) x++;
         if (tecla == ARRIBA && y > 4) y--;
         if (tecla == ABAJO && y+3 < 33) y++;
         pintarNave();
+        pintarCorazones();
     }
 }
 
@@ -68,24 +71,68 @@ void pintarLimites(){
         gotoxy(2,j); printf("%c",186);   //Linea izquierda
         gotoxy(77,j); printf("%c",186);  //Linea derecha
     }
+    gotoxy(2,3); printf("c%",201);
+    gotoxy(2,33); printf("c%",200); //Esquinas
+    gotoxy(77,3); printf("c%",187);
+    gotoxy(77,33); printf("c%",188);
 }
 
-void Nave::pintarVidas(){
-    gotoxy(64,2); printf("Vidas");
+void Nave::pintarCorazones(){
+    gotoxy(50,2); printf("Vidas %i", vidas);   //Pintando las vidas
+    gotoxy(64,2); printf("Salud");
     gotoxy(70,2); printf("      ");
-    for (int i = 0; i < vidas; ++i) {
+    for (int i = 0; i < corazones; ++i) {
         gotoxy(70+i,2); printf("%c",3);
     }
 }
+void Nave::morir() {
+    if (corazones == 0){
+        borrar();
+        gotoxy(x,y);      printf("    **     ");
+        gotoxy(x,y+1); printf("   ****    ");
+        gotoxy(x,y+2); printf("    **     ");
+        Sleep(200);
+
+        gotoxy(x,y);      printf(" *  **  *  ");
+        gotoxy(x,y+1); printf("   ****    ");
+        gotoxy(x,y+2); printf(" *  **  *  ");
+        Sleep(200);
+        borrar();
+        vidas--;
+        corazones = 3;
+        pintarCorazones();
+        pintarNave();
+        Sleep(30);
+    }
+}
+
+
+
+
+
+
+
+
+class Asteroide{
+    int x,y;
+public:
+    Asteroide(int _x,int _y): x(_x),y(_y);
+    void mover();
+    void pintar();
+};
+
+
+
 int main(){
     ocultarCursor();
-    Nave nave(5,5,3);
+    Nave nave(5,5,3,3);
     pintarLimites();
     nave.pintarNave();
-    nave.pintarVidas();
+    nave.pintarCorazones();
 
     boolean gameOver = FALSE;
     while (!gameOver){
+        nave.morir();
         nave.mover();
         //Sleep(50); // Lo detiene por 50milisegundos
     }
