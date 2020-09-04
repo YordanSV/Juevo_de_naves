@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
+#include <stdlib.h>
 
 #define ARRIBA 72
 #define ABAJO 80
@@ -116,22 +117,37 @@ void Nave::morir() {
 class Asteroide{
     int x,y;
 public:
-    Asteroide(int _x,int _y): x(_x),y(_y);
+    Asteroide(int _x,int _y): x(_x),y(_y){};
     void mover();
     void pintar();
 };
 
 
+void Asteroide::pintar() {
+    gotoxy(x,y); printf("%c",184);
+}
 
+void Asteroide::mover() {
+    gotoxy(x,y); printf(" ");
+    y++;
+    if (y > 32){
+        x = rand()%71 + 4;
+        y = 4;
+    }
+    pintar();
+    Sleep(50);
+}
 int main(){
     ocultarCursor();
-    Nave nave(5,5,3,3);
+    Nave nave(40,30,3,3);
     pintarLimites();
     nave.pintarNave();
     nave.pintarCorazones();
+    Asteroide asteroide(10,4);
 
     boolean gameOver = FALSE;
     while (!gameOver){
+        asteroide.mover();
         nave.morir();
         nave.mover();
         //Sleep(50); // Lo detiene por 50milisegundos
