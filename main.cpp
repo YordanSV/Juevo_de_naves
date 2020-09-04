@@ -26,16 +26,16 @@ void ocultarCursor(){
 }
 
 class Nave{
-    int x,y;
-    //Aqui se creo el constructor
+    int x,y,vidas;
 public:
-    Nave(int _x, int _y): x(_x) , y(_y){}
-    void pintar();
+    Nave(int _x, int _y,int _vidas): x(_x) , y(_y), vidas(_vidas){}     //Aqui se creo el constructor
+    void pintarNave();
     void borrar();
     void mover();
+    void pintarVidas();
 };
 
-void Nave::pintar(){
+void Nave::pintarNave(){
     gotoxy(x,y); printf("  %c"  ,30);
     gotoxy(x,y+1); printf(" %c%c%c ",40,207,41);
     gotoxy(x,y+2); printf("%c%c %c%c",30,190,190,30);
@@ -54,8 +54,7 @@ void Nave::mover() {
         if (tecla == DERECHA && x+6 < 77) x++;
         if (tecla == ARRIBA && y > 4) y--;
         if (tecla == ABAJO && y+3 < 33) y++;
-
-        pintar();
+        pintarNave();
     }
 }
 
@@ -70,16 +69,25 @@ void pintarLimites(){
         gotoxy(77,j); printf("%c",186);  //Linea derecha
     }
 }
+
+void Nave::pintarVidas(){
+    gotoxy(64,2); printf("Vidas");
+    gotoxy(70,2); printf("      ");
+    for (int i = 0; i < vidas; ++i) {
+        gotoxy(70+i,2); printf("%c",3);
+    }
+}
 int main(){
     ocultarCursor();
-    Nave nave(5,5);
+    Nave nave(5,5,3);
     pintarLimites();
-    nave.pintar();
+    nave.pintarNave();
+    nave.pintarVidas();
 
     boolean gameOver = FALSE;
     while (!gameOver){
         nave.mover();
-        Sleep(50); // Lo detiene por 50milisegundos
+        //Sleep(50); // Lo detiene por 50milisegundos
     }
 
 
