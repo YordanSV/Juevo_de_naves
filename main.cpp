@@ -35,6 +35,9 @@ public:
     void mover();
     void pintarCorazones();
     void morir();
+    int X(){return x;}
+    int Y(){return y;}
+    void quitarCorazones(){ corazones--;}
 };
 
 void Nave::pintarNave(){
@@ -120,6 +123,7 @@ public:
     Asteroide(int _x,int _y): x(_x),y(_y){};
     void mover();
     void pintar();
+    void choque(struct Nave &N);
 };
 
 
@@ -135,7 +139,16 @@ void Asteroide::mover() {
         y = 4;
     }
     pintar();
-    Sleep(50);
+    Sleep(20);
+}
+void Asteroide::choque(struct Nave &N) {
+    if(x >= N.X() && x < N.X()+6 && y > N.Y() && y <= N.Y()+3) {
+        N.quitarCorazones();
+        N.pintarNave();
+        N.pintarCorazones();
+        x = rand() % 71 + 4;
+        y = 4;
+    }
 }
 int main(){
     ocultarCursor();
@@ -143,11 +156,15 @@ int main(){
     pintarLimites();
     nave.pintarNave();
     nave.pintarCorazones();
-    Asteroide asteroide(10,4);
+    Asteroide asteroide1(10,4);
+    Asteroide asteroide2(15,4);
+    Asteroide asteroide3(20,4);
 
     boolean gameOver = FALSE;
     while (!gameOver){
-        asteroide.mover();
+        asteroide1.mover(); asteroide1.choque(nave);
+        asteroide2.mover(); asteroide2.choque(nave);
+        asteroide3.mover(); asteroide3.choque(nave);
         nave.morir();
         nave.mover();
         //Sleep(50); // Lo detiene por 50milisegundos
